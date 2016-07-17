@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "DomainModel\Model.csproj", "{B120D90B-E6D0-4EE9-BC31-005B75292F29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IkeaParser", "IkeaParser\IkeaParser.csproj", "{B2FBC1F3-E809-4900-A97E-5BF120C65C37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IkeaParserTests", "IkeaParserTests\IkeaParserTests.csproj", "{4D537077-6F67-449B-B5B2-64BBDFED47BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{11BD3861-47ED-4759-96A8-3E81B464C4BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gui", "Gui\Gui.csproj", "{92932AED-33DA-4AD3-B3AE-280FFAD4BD68}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B120D90B-E6D0-4EE9-BC31-005B75292F29} = {B120D90B-E6D0-4EE9-BC31-005B75292F29}
+		{11BD3861-47ED-4759-96A8-3E81B464C4BA} = {11BD3861-47ED-4759-96A8-3E81B464C4BA}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B120D90B-E6D0-4EE9-BC31-005B75292F29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B120D90B-E6D0-4EE9-BC31-005B75292F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B120D90B-E6D0-4EE9-BC31-005B75292F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B120D90B-E6D0-4EE9-BC31-005B75292F29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2FBC1F3-E809-4900-A97E-5BF120C65C37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2FBC1F3-E809-4900-A97E-5BF120C65C37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2FBC1F3-E809-4900-A97E-5BF120C65C37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2FBC1F3-E809-4900-A97E-5BF120C65C37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D537077-6F67-449B-B5B2-64BBDFED47BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D537077-6F67-449B-B5B2-64BBDFED47BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D537077-6F67-449B-B5B2-64BBDFED47BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D537077-6F67-449B-B5B2-64BBDFED47BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11BD3861-47ED-4759-96A8-3E81B464C4BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11BD3861-47ED-4759-96A8-3E81B464C4BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11BD3861-47ED-4759-96A8-3E81B464C4BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11BD3861-47ED-4759-96A8-3E81B464C4BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92932AED-33DA-4AD3-B3AE-280FFAD4BD68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92932AED-33DA-4AD3-B3AE-280FFAD4BD68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92932AED-33DA-4AD3-B3AE-280FFAD4BD68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92932AED-33DA-4AD3-B3AE-280FFAD4BD68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
