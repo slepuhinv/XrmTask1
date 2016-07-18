@@ -11,7 +11,7 @@ namespace Gui.ViewModels
     {
         public MainWindowViewModel()
         {
-            CurrentViewModel = new IkeaBrowserViewModel();
+            CurrentViewModel = new IkeaBrowserViewModel(new DataAccess.IkeaRepository(), new IkeaParser.Parser());
         }
 
         public object CurrentViewModel { get; set; }

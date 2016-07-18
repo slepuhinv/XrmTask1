@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace DataAccess
 {
-    public class IkeaRepository : IDisposable
+    public class IkeaRepository : IIkeaRepository
     {
         private IkeaContext context = new IkeaContext();
 

@@ -21,8 +21,20 @@
                 <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Button Command="{Binding LoadBase}" Content="Загрузить базу" Margin="10,0,0,0" Width="150" Grid.Row="0"/>
-        <Button Command="{Binding Save}" Content="Сохранить в БД" Margin="10,0,0,0"  Grid.Row="0" Grid.Column="2"/>
+        <StackPanel>
+            <Button Command="{Binding LoadFromSite}" Content="Загрузить с сайта" Margin="10,5,0,0" />
+            <Button Command="{Binding LoadFromDB}" Content="Загрузить из БД" Margin="10,5,0,0" />
+            <Button Command="{Binding Save}" Content="Сохранить в БД" Margin="10,5,0,0" />
+        </StackPanel>
+            
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="3" Margin="5,0,0,0">
+            <TextBlock Text="Отделов/Категорий/Товаров: "/>
+            <TextBlock Text="{Binding ItemsCount.Departments}" />
+            <TextBlock Text="/" />
+            <TextBlock Text="{Binding ItemsCount.SubCategories}" />
+            <TextBlock Text="/" />
+            <TextBlock Text="{Binding ItemsCount.Products}" />            
+        </StackPanel>
 
         <TextBlock Text="Все отделы:" Grid.Row="1"/>
             <ListBox 
@@ -40,7 +52,7 @@
             <TextBlock 
                 Grid.Row="1"
                 Grid.Column="1"
-                Text="Подгруппы отдела:" />
+                Text="Категории в отделе:" />
             <ListBox 
                 Grid.Row="2"
                 Grid.Column="1"
@@ -57,16 +69,14 @@
             <TextBlock 
                 Grid.Row="1"
                 Grid.Column="2"
-                Text="Товары в подгруппе:" />
+                Text="Товары в категории:" />
             <ListBox 
                 Grid.Row="2"
                 Grid.Column="2"
                 ItemsSource="{Binding Products}"
                 SelectedItem="{Binding SelectedProduct}"
                 ScrollViewer.CanContentScroll="False"
-                ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                >
-                
+                ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
@@ -78,14 +88,6 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-
-        <StackPanel Grid.ColumnSpan="3" Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal">
-            <StackPanel>
-                <TextBlock ><Hyperlink Command="{Binding Navigate}" CommandParameter="{Binding SelectedProduct.Uri}" > <TextBlock Text="SelectedProduct"/></Hyperlink></TextBlock>
-            </StackPanel>
-            <Image Source="{Binding SelectedProduct.Image}" Width="200" Height="200" />
-            
-        </StackPanel>
         </Grid>
 
 </UserControl>

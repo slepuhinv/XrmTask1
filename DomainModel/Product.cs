@@ -13,32 +13,11 @@ namespace Model
         public string Name { get; set; }
 
         public string ShortDescription { get; set; }
-
-        public string ArticleNumber { get; set; }
-
+                
         public string Price { get; set; }
 
         public string Image { get; set; }
 
-        public virtual List<SubCategory> SubCategories { get; set; } = new List<SubCategory>();
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-            Product p = obj as Product;
-            if (p == null)
-            {
-                return false;
-            }
-            return Id == p.Id;
-        }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
+        public virtual List<SubCategory> SubCategories { get; set; }
     }
 }

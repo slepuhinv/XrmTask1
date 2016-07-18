@@ -8,69 +8,61 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Gui.ViewModels
 {
     public class IkeaBrowserViewModel : INotifyPropertyChanged
     {
-        private IkeaRepository _rep = new IkeaRepository();
-
-        private Parser _parser;
-        private List<SubCategory> _subcategories = new List<SubCategory>();
-        private List<Product> _products = new List<Product>();
+        private IIkeaRepository _repositiry;
+        private IParser _parser;
+        
+        private List<Department> _departments;
+        private List<SubCategory> _subcategories;
+        private List<Product> _products;
         private Department _selectedDepartment;
         private SubCategory _selectedSubCategory;
         private Product _selectedProduct;
 
-        public List<Department> Departments { get; private set; }
+        private ParseProgress _itemsCount = new ParseProgress();
+        private bool _isBusy = false;
 
-        public Product SelectedProduct {
-            get
+        public IkeaBrowserViewModel(IIkeaRepository repository, IParser parser)
+        {
+            _repositiry = repository;
+            _parser = parser;
+
+            LoadFromSite = new Command(OnLoadFromSite, CanLoadFromSite);
+            LoadFromDB = new Command(OnLoadFromDB, CanLoadFromDB);
+            Save = new Command(OnSave, CanSave);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public List<Department> Departments
+        {
+            get { return _departments; }
+            private set
             {
-                return _selectedProduct;
-            }
-            set
-            {
-                _selectedProduct = value;
+                _departments = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public Department SelectedDepartment {
-            get
-            {
-                return _selectedDepartment;
-            }
-            set
-            {
-                _selectedDepartment = value;
-                NotifyPropertyChanged("SubCategories");
-            }
-        }
-
-        public SubCategory SelectedSubCategory
+        public List<SubCategory> SubCategories
         {
             get
             {
-                return _selectedSubCategory;
-            }
-            set
-            {
-                _selectedSubCategory = value;
-                NotifyPropertyChanged("Products");
-            }
-        }
-
-        public List<SubCategory> SubCategories {
-            get
-            {
                 if (SelectedDepartment == null)
+                {
                     return null;
+                }
                 return SelectedDepartment.SubCategories;
             }
             private set
             {
                 _subcategories = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -87,80 +79,151 @@ namespace Gui.ViewModels
             private set
             {
                 _products = value;
+                NotifyPropertyChanged();
             }
         }
 
-        public Command LoadBase { get; private set; }
+        public Department SelectedDepartment {
+            get { return _selectedDepartment; }
+            set
+            {
+                _selectedDepartment = value;
+                NotifyPropertyChanged("SubCategories");
+            }
+        }
 
-        public Command Test { get; private set; }
+        public SubCategory SelectedSubCategory
+        {
+            get { return _selectedSubCategory; }
+            set
+            {
+                _selectedSubCategory = value;
+                NotifyPropertyChanged("Products");
+            }
+        }
+
+        public Product SelectedProduct {
+            get { return _selectedProduct; }
+            set
+            {
+                _selectedProduct = value;
+                NotifyPropertyChanged();
+            }
+        }
+                
+        public ParseProgress ItemsCount
+        {
+            get { return _itemsCount; }
+            set
+            {
+                _itemsCount = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public Command LoadFromSite { get; private set; }
+
+        public Command LoadFromDB { get; private set; }
 
         public Command Save { get; private set; }
 
-        private bool _isLoading = false;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private bool CanLoadBase()
+        private bool CanLoadFromSite()
         {
-            return !_isLoading;
+            return !_isBusy;
         }
 
-        private async void OnLoadBase()
+        private async void OnLoadFromSite()
         {
-            _isLoading = true;
-            LoadBase.RaiseCanExecuteChanged();
-            await _parser.ParseAsync();
+            if (_isBusy)
+                return;
+
+            _isBusy = true;
+            LoadFromSite.RaiseCanExecuteChanged();
+            LoadFromDB.RaiseCanExecuteChanged();
+            Save.RaiseCanExecuteChanged();
+
+            await _parser.ParseAsync(new Progress<ParseProgress>(p =>
+            {
+                ItemsCount.Departments = p.Departments;
+                ItemsCount.SubCategories = p.SubCategories;
+                ItemsCount.Products = p.Products;
+                NotifyPropertyChanged("ItemsCount");
+            }));
+
+            _isBusy = false;
             Departments = _parser.Departments;
-            SubCategories = _parser.Subcategories;
+            SubCategories = _parser.SubCategories;
             Products = _parser.Products;
-            NotifyPropertyChanged("Departments");
-            _isLoading = false;
-            LoadBase.RaiseCanExecuteChanged();
-        }
-
-        public IkeaBrowserViewModel()
-        {
-        
-            LoadBase = new Command(OnLoadBase, CanLoadBase);
-            Test = new Command(OnTest);
-            Save = new Command(OnSave, CanSave);
-            _parser = new Parser();
-
-            LoadData();
             
-            //_products.Add(new Product { Id = "1", Image = "http://www.ikea.com/ru/ru/images/products/tostero-cehol-dla-sezlonga-cernyj__0306790_PE427288_S4.JPG", Name = "ТОСТЕРО" });
-            //_products.Add(new Product { Id = "2", Image = "http://www.ikea.com/ru/ru/images/products/bussen-puf-mesok-d-doma-sada-oranzevyj__0390218_PE559785_S4.JPG", Name = "БУССЭН" });
+            LoadFromSite.RaiseCanExecuteChanged();
+            LoadFromDB.RaiseCanExecuteChanged();
+            Save.RaiseCanExecuteChanged();
 
+            MessageBox.Show("Загружено с сайта");
+        }
+        
+        private bool CanLoadFromDB()
+        {
+            return !_isBusy;
         }
 
-        private async void LoadData()
+        private async void OnLoadFromDB()
         {
+            if (_isBusy)
+                return;
+            _isBusy = true;
+            LoadFromSite.RaiseCanExecuteChanged();
+            LoadFromDB.RaiseCanExecuteChanged();
+            Save.RaiseCanExecuteChanged();
+
             await Task.Run(() =>
             {
-                _products = _rep.GetProducts();
-                _subcategories = _rep.GetSubCategories();
-                Departments = _rep.GetDepartments();
+                _products = _repositiry.GetProducts();
+                _subcategories = _repositiry.GetSubCategories();
+                Departments = _repositiry.GetDepartments();
             });
-            NotifyPropertyChanged("Departments");
+
+            _isBusy = false;
+            LoadFromSite.RaiseCanExecuteChanged();
+            LoadFromDB.RaiseCanExecuteChanged();
+            Save.RaiseCanExecuteChanged();
+            ItemsCount.Departments = Departments.Count;
+            ItemsCount.SubCategories = _subcategories.Count;
+            ItemsCount.Products = _products.Count;
+            NotifyPropertyChanged("ItemsCount");
+
+            MessageBox.Show("Загружено из БД");
         }
 
         private bool CanSave()
         {
-            return _products != null;
+            return (!_isBusy && _products != null);
         }
 
-        private void OnSave()
+        private async void OnSave()
         {
-            _rep.Clear();
-            _rep.AddDepartments(Departments);
-            _rep.AddSubCategories(_subcategories);
-            _rep.AddProducts(_products);
-            _rep.Save();
-        }
+            if (_isBusy)
+                return;
+            _isBusy = true;
+            LoadFromSite.RaiseCanExecuteChanged();
+            LoadFromDB.RaiseCanExecuteChanged();
+            Save.RaiseCanExecuteChanged();
 
-        private void OnTest()
-        {
-            
+            await Task.Run(() =>
+            {
+                _repositiry.Clear();
+                _repositiry.AddDepartments(Departments);
+                _repositiry.AddSubCategories(_subcategories);
+                _repositiry.AddProducts(_products);
+                _repositiry.Save();
+            });
+
+            _isBusy = false;
+            LoadFromSite.RaiseCanExecuteChanged();
+            LoadFromDB.RaiseCanExecuteChanged();
+            Save.RaiseCanExecuteChanged();
+
+            MessageBox.Show("Сохранено в БД");
         }
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

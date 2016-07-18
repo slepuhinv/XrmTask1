@@ -9,11 +9,11 @@ namespace IkeaParser
 {
     public interface IParser
     {
-        void Parse(string source);
-
-        
+        void Parse();
+        Task ParseAsync(IProgress<ParseProgress> progress);
 
         List<Department> Departments { get; }
-
+        List<SubCategory> SubCategories { get; }
+        List<Product> Products { get; }
     }
 }

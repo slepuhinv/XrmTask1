@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IIkeaRepository.cs" />
     <Compile Include="IkeaContext.cs" />
     <Compile Include="IkeaRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

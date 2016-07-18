@@ -14,25 +14,6 @@ namespace Model
 
         public Department Department { get; set; }
 
-        public virtual List<Product> Products { get; set; } = new List<Product>();
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-            SubCategory cat = obj as SubCategory;
-            if (cat == null)
-            {
-                return false;
-            }
-            return Id == cat.Id;
-        }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
+        public virtual List<Product> Products { get; set; }
     }
 }
