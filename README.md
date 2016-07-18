@@ -1,6 +1,7 @@
 # XrmTask1
 ## Тестовое задание № 1 http://xrm.ru/job/test_task/
 В качестве подопытного выбран каталог ИКЕА http://www.ikea.com/ru/ru/catalog/allproducts/
+
 Структура каталога следующая:
 * Отделы (представлены классом *Department*)
   * Категории (класс *SubCategory*)
